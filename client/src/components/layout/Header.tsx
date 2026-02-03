@@ -33,7 +33,7 @@ export function Header() {
 
                 <div className="flex items-center space-x-2 text-gray-600">
                   <User className="w-4 h-4" />
-                  <span className="text-sm">{user.email}</span>
+                  <span className="text-sm">{user.username}</span>
                 </div>
 
                 {user.role === 'admin' && (

@@ -8,8 +8,8 @@ interface AuthState {
   isLoading: boolean;
   isAuthenticated: boolean;
 
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<void>;
+  register: (username: string, password: string) => Promise<void>;
   logout: () => void;
   checkAuth: () => Promise<void>;
   updateBalance: (balance: number) => void;
@@ -21,14 +21,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoading: true,
   isAuthenticated: false,
 
-  login: async (email: string, password: string) => {
-    const { user, token } = await authService.login(email, password);
+  login: async (username: string, password: string) => {
+    const { user, token } = await authService.login(username, password);
     localStorage.setItem('token', token);
     set({ user, token, isAuthenticated: true });
   },
 
-  register: async (email: string, password: string) => {
-    const { user, token } = await authService.register(email, password);
+  register: async (username: string, password: string) => {
+    const { user, token } = await authService.register(username, password);
     localStorage.setItem('token', token);
     set({ user, token, isAuthenticated: true });
   },

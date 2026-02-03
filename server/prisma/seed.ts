@@ -9,17 +9,17 @@ async function main() {
   // Create admin user
   const adminPassword = await bcrypt.hash('admin123', 12);
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@smsplatform.com' },
+    where: { username: 'admin' },
     update: {},
     create: {
-      email: 'admin@smsplatform.com',
+      username: 'admin',
       password: adminPassword,
       role: 'admin',
       status: 'active',
       balance: 0,
     },
   });
-  console.log('Admin user created:', admin.email);
+  console.log('Admin user created:', admin.username);
 
   // Create default products
   const products = [

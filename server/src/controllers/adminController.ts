@@ -136,7 +136,7 @@ export const getUsers = async (req: AuthRequest, res: Response): Promise<void> =
     const skip = (page - 1) * limit;
 
     const where = search
-      ? { email: { contains: search } }
+      ? { username: { contains: search } }
       : {};
 
     const [users, total] = await Promise.all([
@@ -144,7 +144,7 @@ export const getUsers = async (req: AuthRequest, res: Response): Promise<void> =
         where,
         select: {
           id: true,
-          email: true,
+          username: true,
           balance: true,
           role: true,
           status: true,
@@ -176,7 +176,7 @@ export const getUser = async (req: AuthRequest, res: Response): Promise<void> =>
       where: { id: userId },
       select: {
         id: true,
-        email: true,
+        username: true,
         balance: true,
         role: true,
         status: true,
@@ -217,7 +217,7 @@ export const updateUser = async (req: AuthRequest, res: Response): Promise<void>
     const user = await prisma.user.update({
       where: { id: userId },
       data: validation.data,
-      select: { id: true, email: true, role: true, status: true },
+      select: { id: true, username: true, role: true, status: true },
     });
 
     await logAdminAction(
@@ -287,7 +287,7 @@ export const getAllOrders = async (req: AuthRequest, res: Response): Promise<voi
 
     const [orders, total] = await Promise.all([
       prisma.order.findMany({
-        include: { user: { select: { id: true, email: true } } },
+        include: { user: { select: { id: true, username: true } } },
         orderBy: { createdAt: 'desc' },
         skip,
         take: limit,
@@ -318,7 +318,7 @@ export const getDeposits = async (req: AuthRequest, res: Response): Promise<void
     const [deposits, total] = await Promise.all([
       prisma.depositRequest.findMany({
         where,
-        include: { user: { select: { id: true, email: true } } },
+        include: { user: { select: { id: true, username: true } } },
         orderBy: { createdAt: 'desc' },
         skip,
         take: limit,
@@ -627,7 +627,7 @@ export const getLogs = async (req: AuthRequest, res: Response): Promise<void> =>
 
     const [logs, total] = await Promise.all([
       prisma.adminLog.findMany({
-        include: { admin: { select: { id: true, email: true } } },
+        include: { admin: { select: { id: true, username: true } } },
         orderBy: { createdAt: 'desc' },
         skip,
         take: limit,

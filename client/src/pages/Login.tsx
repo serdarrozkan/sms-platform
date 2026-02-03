@@ -5,7 +5,7 @@ import { Button, Input, Card } from '../components/common';
 import { useAuthStore } from '../store/authStore';
 
 export function Login() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuthStore();
@@ -16,7 +16,7 @@ export function Login() {
     setIsLoading(true);
 
     try {
-      await login(email, password);
+      await login(username, password);
       toast.success('Giriş başarılı!');
       navigate('/');
     } catch (error) {
@@ -37,11 +37,11 @@ export function Login() {
         <Card>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              type="email"
-              label="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="ornek@email.com"
+              type="text"
+              label="Kullanıcı Adı"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="kullaniciadi"
               required
             />
 

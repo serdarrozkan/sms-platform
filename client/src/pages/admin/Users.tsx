@@ -79,7 +79,7 @@ export function Users() {
         <div className="flex items-center justify-between mb-4">
           <CardHeader title="Kullanıcı Listesi" />
           <Input
-            placeholder="Email ara..."
+            placeholder="Kullanıcı adı ara..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-64"
@@ -97,7 +97,7 @@ export function Users() {
                 <thead>
                   <tr className="text-left text-sm text-gray-500 border-b">
                     <th className="pb-3 font-medium">#</th>
-                    <th className="pb-3 font-medium">Email</th>
+                    <th className="pb-3 font-medium">Kullanıcı Adı</th>
                     <th className="pb-3 font-medium">Bakiye</th>
                     <th className="pb-3 font-medium">Rol</th>
                     <th className="pb-3 font-medium">Durum</th>
@@ -109,7 +109,7 @@ export function Users() {
                   {users?.data.map((user) => (
                     <tr key={user.id} className="border-b last:border-0">
                       <td className="py-3">{user.id}</td>
-                      <td className="py-3">{user.email}</td>
+                      <td className="py-3">{user.username}</td>
                       <td className="py-3 font-medium">{formatPrice(user.balance)}</td>
                       <td className="py-3">
                         <span className={`px-2 py-1 rounded text-xs ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'}`}>
@@ -174,7 +174,7 @@ export function Users() {
       <Modal
         isOpen={!!selectedUser}
         onClose={() => setSelectedUser(null)}
-        title={`Bakiye Ekle/Çıkar - ${selectedUser?.email}`}
+        title={`Bakiye Ekle/Çıkar - ${selectedUser?.username}`}
       >
         <div className="space-y-4">
           <p className="text-sm text-gray-500">

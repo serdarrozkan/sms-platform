@@ -7,9 +7,9 @@ interface AuthResponse {
 }
 
 export const authService = {
-  async register(email: string, password: string): Promise<AuthResponse> {
+  async register(username: string, password: string): Promise<AuthResponse> {
     const response = await api.post<ApiResponse<AuthResponse>>('/auth/register', {
-      email,
+      username,
       password,
     });
     if (response.data.success && response.data.data) {
@@ -18,9 +18,9 @@ export const authService = {
     throw new Error(response.data.error || 'Kayıt başarısız');
   },
 
-  async login(email: string, password: string): Promise<AuthResponse> {
+  async login(username: string, password: string): Promise<AuthResponse> {
     const response = await api.post<ApiResponse<AuthResponse>>('/auth/login', {
-      email,
+      username,
       password,
     });
     if (response.data.success && response.data.data) {

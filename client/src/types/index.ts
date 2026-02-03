@@ -1,6 +1,6 @@
 export interface User {
   id: number;
-  email: string;
+  username: string;
   balance: number;
   role: 'user' | 'admin';
   status: 'active' | 'banned' | 'pending';

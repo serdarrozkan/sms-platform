@@ -5,7 +5,7 @@ import { Button, Input, Card } from '../components/common';
 import { useAuthStore } from '../store/authStore';
 
 export function Register() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +14,11 @@ export function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (username.length < 3) {
+      toast.error('Kullanıcı adı en az 3 karakter olmalı');
+      return;
+    }
 
     if (password !== confirmPassword) {
       toast.error('Şifreler eşleşmiyor');
@@ -28,7 +33,7 @@ export function Register() {
     setIsLoading(true);
 
     try {
-      await register(email, password);
+      await register(username, password);
       toast.success('Kayıt başarılı!');
       navigate('/');
     } catch (error) {
@@ -49,11 +54,11 @@ export function Register() {
         <Card>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              type="email"
-              label="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="ornek@email.com"
+              type="text"
+              label="Kullanıcı Adı"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="kullaniciadi"
               required
             />
 

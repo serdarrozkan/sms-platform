@@ -12,7 +12,7 @@ interface AdminLog {
   details: string | null;
   ipAddress: string | null;
   createdAt: string;
-  admin: { id: number; email: string };
+  admin: { id: number; username: string };
 }
 
 export function Logs() {
@@ -80,7 +80,7 @@ export function Logs() {
                   {logs?.data.map((log) => (
                     <tr key={log.id} className="border-b last:border-0">
                       <td className="py-3">{log.id}</td>
-                      <td className="py-3 text-sm">{log.admin.email}</td>
+                      <td className="py-3 text-sm">{log.admin.username}</td>
                       <td className="py-3">
                         <span className="px-2 py-1 bg-gray-100 rounded text-sm">
                           {getActionLabel(log.action)}

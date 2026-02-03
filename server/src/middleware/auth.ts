@@ -6,7 +6,7 @@ import { AuthRequest } from '../types';
 
 interface JwtPayload {
   userId: number;
-  email: string;
+  username: string;
 }
 
 export const authMiddleware = async (
@@ -67,9 +67,9 @@ export const authMiddleware = async (
   }
 };
 
-export const generateToken = (userId: number, email: string): string => {
+export const generateToken = (userId: number, username: string): string => {
   return jwt.sign(
-    { userId, email },
+    { userId, username },
     env.jwtSecret,
     { expiresIn: env.jwtExpiresIn } as jwt.SignOptions
   );

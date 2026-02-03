@@ -5,7 +5,7 @@ import { Card, CardHeader, Button, StatusBadge, Modal, Input } from '../../compo
 import { adminService } from '../../services/adminService';
 import { DepositRequest, PaginatedResponse } from '../../types';
 
-type DepositWithUser = DepositRequest & { user: { id: number; email: string } };
+type DepositWithUser = DepositRequest & { user: { id: number; username: string } };
 
 export function Deposits() {
   const [deposits, setDeposits] = useState<PaginatedResponse<DepositWithUser> | null>(null);
@@ -105,7 +105,7 @@ export function Deposits() {
                   {deposits?.data.map((deposit) => (
                     <tr key={deposit.id} className="border-b last:border-0">
                       <td className="py-3">{deposit.id}</td>
-                      <td className="py-3">{deposit.user.email}</td>
+                      <td className="py-3">{deposit.user.username}</td>
                       <td className="py-3 font-medium">{formatPrice(deposit.amount)}</td>
                       <td className="py-3">{deposit.paymentMethod}</td>
                       <td className="py-3 text-sm text-gray-500 max-w-xs truncate">
@@ -177,7 +177,7 @@ export function Deposits() {
       >
         <div className="space-y-4">
           <div className="p-3 bg-gray-50 rounded-lg">
-            <p><strong>Kullanıcı:</strong> {selectedDeposit?.user.email}</p>
+            <p><strong>Kullanıcı:</strong> {selectedDeposit?.user.username}</p>
             <p><strong>Tutar:</strong> {formatPrice(selectedDeposit?.amount || 0)}</p>
             <p><strong>Yöntem:</strong> {selectedDeposit?.paymentMethod}</p>
             {selectedDeposit?.paymentDetails && (

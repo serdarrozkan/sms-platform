@@ -6,12 +6,12 @@ import { generateToken } from '../middleware/auth';
 import { AuthRequest } from '../types';
 
 const registerSchema = z.object({
-  email: z.string().email('Geçerli bir email adresi girin'),
+  username: z.string().min(3, 'Kullanıcı adı en az 3 karakter olmalı').max(50),
   password: z.string().min(6, 'Şifre en az 6 karakter olmalı'),
 });
 
 const loginSchema = z.object({
-  email: z.string().email('Geçerli bir email adresi girin'),
+  username: z.string().min(1, 'Kullanıcı adı gerekli'),
   password: z.string().min(1, 'Şifre gerekli'),
 });
 
@@ -27,17 +27,17 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const { email, password } = validation.data;
+    const { username, password } = validation.data;
 
-    // Email kontrolü
+    // Username kontrolü
     const existingUser = await prisma.user.findUnique({
-      where: { email },
+      where: { username },
     });
 
     if (existingUser) {
       res.status(400).json({
         success: false,
-        error: 'Bu email adresi zaten kullanılıyor',
+        error: 'Bu kullanıcı adı zaten kullanılıyor',
       });
       return;
     }
@@ -48,12 +48,12 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     // Kullanıcı oluştur
     const user = await prisma.user.create({
       data: {
-        email,
+        username,
         password: hashedPassword,
       },
       select: {
         id: true,
-        email: true,
+        username: true,
         balance: true,
         role: true,
         createdAt: true,
@@ -61,7 +61,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     });
 
     // Token oluştur
-    const token = generateToken(user.id, user.email);
+    const token = generateToken(user.id, user.username);
 
     res.status(201).json({
       success: true,
@@ -91,17 +91,17 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const { email, password } = validation.data;
+    const { username, password } = validation.data;
 
     // Kullanıcı bul
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { username },
     });
 
     if (!user) {
       res.status(401).json({
         success: false,
-        error: 'Email veya şifre hatalı',
+        error: 'Kullanıcı adı veya şifre hatalı',
       });
       return;
     }
@@ -112,7 +112,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     if (!isValidPassword) {
       res.status(401).json({
         success: false,
-        error: 'Email veya şifre hatalı',
+        error: 'Kullanıcı adı veya şifre hatalı',
       });
       return;
     }
@@ -127,14 +127,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Token oluştur
-    const token = generateToken(user.id, user.email);
+    const token = generateToken(user.id, user.username);
 
     res.json({
       success: true,
       data: {
         user: {
           id: user.id,
-          email: user.email,
+          username: user.username,
           balance: user.balance,
           role: user.role,
           createdAt: user.createdAt,
@@ -165,7 +165,7 @@ export const me = async (req: AuthRequest, res: Response): Promise<void> => {
       success: true,
       data: {
         id: req.user.id,
-        email: req.user.email,
+        username: req.user.username,
         balance: req.user.balance,
         role: req.user.role,
         status: req.user.status,

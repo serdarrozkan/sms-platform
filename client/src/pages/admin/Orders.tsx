@@ -3,7 +3,7 @@ import { Card, CardHeader, Button, StatusBadge } from '../../components/common';
 import { adminService } from '../../services/adminService';
 import { Order, PaginatedResponse } from '../../types';
 
-type OrderWithUser = Order & { user: { id: number; email: string } };
+type OrderWithUser = Order & { user: { id: number; username: string } };
 
 export function Orders() {
   const [orders, setOrders] = useState<PaginatedResponse<OrderWithUser> | null>(null);
@@ -71,7 +71,7 @@ export function Orders() {
                   {orders?.data.map((order) => (
                     <tr key={order.id} className="border-b last:border-0">
                       <td className="py-3">{order.id}</td>
-                      <td className="py-3 text-sm">{order.user.email}</td>
+                      <td className="py-3 text-sm">{order.user.username}</td>
                       <td className="py-3 font-medium">{order.product}</td>
                       <td className="py-3 font-mono text-sm">{order.phone}</td>
                       <td className="py-3">{order.country}</td>

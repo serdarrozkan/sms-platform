@@ -27,7 +27,7 @@ interface AdminLog {
   details: string | null;
   ipAddress: string | null;
   createdAt: string;
-  admin: { id: number; email: string };
+  admin: { id: number; username: string };
 }
 
 export const adminService = {
@@ -72,8 +72,8 @@ export const adminService = {
   },
 
   // Orders
-  async getOrders(page: number = 1): Promise<PaginatedResponse<Order & { user: { id: number; email: string } }>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Order & { user: { id: number; email: string } }>>>(
+  async getOrders(page: number = 1): Promise<PaginatedResponse<Order & { user: { id: number; username: string } }>> {
+    const response = await api.get<ApiResponse<PaginatedResponse<Order & { user: { id: number; username: string } }>>>(
       `/admin/orders?page=${page}`
     );
     if (response.data.success && response.data.data) {
@@ -83,11 +83,11 @@ export const adminService = {
   },
 
   // Deposits
-  async getDeposits(page: number = 1, status?: string): Promise<PaginatedResponse<DepositRequest & { user: { id: number; email: string } }>> {
+  async getDeposits(page: number = 1, status?: string): Promise<PaginatedResponse<DepositRequest & { user: { id: number; username: string } }>> {
     const params = new URLSearchParams({ page: page.toString() });
     if (status) params.append('status', status);
 
-    const response = await api.get<ApiResponse<PaginatedResponse<DepositRequest & { user: { id: number; email: string } }>>>(
+    const response = await api.get<ApiResponse<PaginatedResponse<DepositRequest & { user: { id: number; username: string } }>>>(
       `/admin/deposits?${params}`
     );
     if (response.data.success && response.data.data) {

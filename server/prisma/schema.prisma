@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  user
+  admin
+}
+
+enum UserStatus {
+  active
+  banned
+  pending
+}
+
+enum OrderStatus {
+  pending
+  received
+  finished
+  canceled
+  banned
+  timeout
+}
+
+enum TransactionType {
+  deposit
+  withdraw
+  purchase
+  refund
+  admin_add
+  admin_remove
+}
+
+enum DepositStatus {
+  pending
+  approved
+  rejected
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  balance   Decimal    @default(0) @db.Decimal(10, 2)
+  role      UserRole   @default(user)
+  status    UserStatus @default(active)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  orders              Order[]
+  balanceTransactions BalanceTransaction[]
+  depositRequests     DepositRequest[]
+  processedDeposits   DepositRequest[]     @relation("ProcessedBy")
+  adminLogs           AdminLog[]
+
+  @@map("users")
+}
+
+model Order {
+  id             Int         @id @default(autoincrement())
+  userId         Int         @map("user_id")
+  fivesimOrderId Int         @map("fivesim_order_id")
+  phone          String      @db.VarChar(20)
+  product        String      @db.VarChar(50)
+  country        String      @db.VarChar(50)
+  operator       String      @db.VarChar(50)
+  fivesimPrice   Decimal     @map("fivesim_price") @db.Decimal(10, 4)
+  sellPrice      Decimal     @map("sell_price") @db.Decimal(10, 4)
+  profit         Decimal     @db.Decimal(10, 4)
+  status         OrderStatus @default(pending)
+  smsCode        String?     @map("sms_code") @db.VarChar(20)
+  smsText        String?     @map("sms_text") @db.Text
+  expiresAt      DateTime    @map("expires_at")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("orders")
+}
+
+model BalanceTransaction {
+  id            Int             @id @default(autoincrement())
+  userId        Int             @map("user_id")
+  type          TransactionType
+  amount        Decimal         @db.Decimal(10, 2)
+  balanceBefore Decimal         @map("balance_before") @db.Decimal(10, 2)
+  balanceAfter  Decimal         @map("balance_after") @db.Decimal(10, 2)
+  description   String?         @db.VarChar(255)
+  referenceId   Int?            @map("reference_id")
+  adminId       Int?            @map("admin_id")
+  createdAt     DateTime        @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("balance_transactions")
+}
+
+model DepositRequest {
+  id             Int           @id @default(autoincrement())
+  userId         Int           @map("user_id")
+  amount         Decimal       @db.Decimal(10, 2)
+  paymentMethod  String        @map("payment_method") @db.VarChar(50)
+  paymentDetails String?       @map("payment_details") @db.Text
+  status         DepositStatus @default(pending)
+  adminNote      String?       @map("admin_note") @db.Text
+  processedBy    Int?          @map("processed_by")
+  processedAt    DateTime?     @map("processed_at")
+  createdAt      DateTime      @default(now()) @map("created_at")
+
+  user      User  @relation(fields: [userId], references: [id])
+  processor User? @relation("ProcessedBy", fields: [processedBy], references: [id])
+
+  @@map("deposit_requests")
+}
+
+model Product {
+  id           Int      @id @default(autoincrement())
+  code         String   @unique @db.VarChar(50)
+  name         String   @db.VarChar(100)
+  icon         String?  @db.VarChar(255)
+  isActive     Boolean  @default(true) @map("is_active")
+  profitMargin Decimal? @map("profit_margin") @db.Decimal(5, 2)
+  sortOrder    Int      @default(0) @map("sort_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+model Country {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique @db.VarChar(50)
+  name        String   @db.VarChar(100)
+  flag        String?  @db.VarChar(10)
+  isActive    Boolean  @default(true) @map("is_active")
+  extraMargin Decimal  @default(0) @map("extra_margin") @db.Decimal(5, 2)
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("countries")
+}
+
+model Setting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique @db.VarChar(100)
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
+
+model AdminLog {
+  id         Int      @id @default(autoincrement())
+  adminId    Int      @map("admin_id")
+  action     String   @db.VarChar(100)
+  targetType String?  @map("target_type") @db.VarChar(50)
+  targetId   Int?     @map("target_id")
+  details    String?  @db.Json
+  ipAddress  String?  @map("ip_address") @db.VarChar(45)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  admin User @relation(fields: [adminId], references: [id])
+
+  @@map("admin_logs")
+}

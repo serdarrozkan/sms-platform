@@ -1,0 +1,39 @@
+import api from './api';
+import { User, ApiResponse } from '../types';
+
+interface AuthResponse {
+  user: User;
+  token: string;
+}
+
+export const authService = {
+  async register(email: string, password: string): Promise<AuthResponse> {
+    const response = await api.post<ApiResponse<AuthResponse>>('/auth/register', {
+      email,
+      password,
+    });
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.error || 'Kayıt başarısız');
+  },
+
+  async login(email: string, password: string): Promise<AuthResponse> {
+    const response = await api.post<ApiResponse<AuthResponse>>('/auth/login', {
+      email,
+      password,
+    });
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.error || 'Giriş başarısız');
+  },
+
+  async me(): Promise<User> {
+    const response = await api.get<ApiResponse<User>>('/auth/me');
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.error || 'Kullanıcı bilgisi alınamadı');
+  },
+};

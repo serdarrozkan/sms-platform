@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(sc:brainstorm)",
+      "WebFetch(domain:5sim.net)",
+      "WebSearch",
+      "WebFetch(domain:docs.5sim.net)",
+      "WebFetch(domain:github.com)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

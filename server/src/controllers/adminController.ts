@@ -58,7 +58,7 @@ async function logAdminAction(
       action,
       targetType,
       targetId,
-      details: details ? JSON.stringify(details) : null,
+      details: details ?? undefined,
       ipAddress,
     },
   });
@@ -170,7 +170,7 @@ export const getUsers = async (req: AuthRequest, res: Response): Promise<void> =
 
 export const getUser = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.params.id as string);
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -206,7 +206,7 @@ export const getUser = async (req: AuthRequest, res: Response): Promise<void> =>
 
 export const updateUser = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.params.id as string);
     const validation = updateUserSchema.safeParse(req.body);
 
     if (!validation.success) {
@@ -238,7 +238,7 @@ export const updateUser = async (req: AuthRequest, res: Response): Promise<void>
 
 export const addUserBalance = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.params.id as string);
     const validation = addBalanceSchema.safeParse(req.body);
 
     if (!validation.success) {
@@ -338,7 +338,7 @@ export const getDeposits = async (req: AuthRequest, res: Response): Promise<void
 
 export const updateDeposit = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const depositId = parseInt(req.params.id);
+    const depositId = parseInt(req.params.id as string);
     const validation = updateDepositSchema.safeParse(req.body);
 
     if (!validation.success) {
@@ -443,7 +443,7 @@ export const createProduct = async (req: AuthRequest, res: Response): Promise<vo
 
 export const updateProduct = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const productId = parseInt(req.params.id);
+    const productId = parseInt(req.params.id as string);
     const validation = productSchema.partial().safeParse(req.body);
 
     if (!validation.success) {
@@ -472,7 +472,7 @@ export const updateProduct = async (req: AuthRequest, res: Response): Promise<vo
 
 export const deleteProduct = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const productId = parseInt(req.params.id);
+    const productId = parseInt(req.params.id as string);
     await prisma.product.delete({ where: { id: productId } });
     res.json({ success: true, message: 'Ürün silindi' });
   } catch (error) {
@@ -518,7 +518,7 @@ export const createCountry = async (req: AuthRequest, res: Response): Promise<vo
 
 export const updateCountry = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const countryId = parseInt(req.params.id);
+    const countryId = parseInt(req.params.id as string);
     const validation = countrySchema.partial().safeParse(req.body);
 
     if (!validation.success) {
@@ -545,7 +545,7 @@ export const updateCountry = async (req: AuthRequest, res: Response): Promise<vo
 
 export const deleteCountry = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const countryId = parseInt(req.params.id);
+    const countryId = parseInt(req.params.id as string);
     await prisma.country.delete({ where: { id: countryId } });
     res.json({ success: true, message: 'Ülke silindi' });
   } catch (error) {

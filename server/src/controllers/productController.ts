@@ -31,7 +31,7 @@ export const getProducts = async (_req: Request, res: Response): Promise<void> =
 
 export const getProductPrices = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { code } = req.params;
+    const code = req.params.code as string;
     const country = (req.query.country as string) || 'russia';
     const operator = (req.query.operator as string) || 'any';
 

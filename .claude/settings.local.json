@@ -8,7 +8,13 @@
       "WebFetch(domain:github.com)",
       "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(gh repo create:*)",
+      "Bash(ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 root@31.97.153.92 \"echo ''SSH baglantisi basarili''\")",
+      "Bash(cat:*)",
+      "Bash(ssh -o StrictHostKeyChecking=no root@31.97.153.92 'cat > /root/deploy.sh && chmod +x /root/deploy.sh')",
+      "Bash(ssh:*)",
+      "Bash(git push:*)"
     ]
   }
 }

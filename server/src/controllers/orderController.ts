@@ -76,7 +76,7 @@ export const getOrder = async (req: AuthRequest, res: Response): Promise<void> =
       return;
     }
 
-    const orderId = parseInt(req.params.id);
+    const orderId = parseInt(req.params.id as string);
     const order = await orderService.getOrderById(orderId, req.user.id);
 
     res.json({
@@ -99,7 +99,7 @@ export const checkOrder = async (req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
-    const orderId = parseInt(req.params.id);
+    const orderId = parseInt(req.params.id as string);
     const result = await orderService.checkOrder(orderId, req.user.id);
 
     res.json({
@@ -122,11 +122,10 @@ export const finishOrder = async (req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    const orderId = parseInt(req.params.id);
+    const orderId = parseInt(req.params.id as string);
     const result = await orderService.finishOrder(orderId, req.user.id);
 
     res.json({
-      success: true,
       ...result,
     });
   } catch (error) {
@@ -145,11 +144,10 @@ export const cancelOrder = async (req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    const orderId = parseInt(req.params.id);
+    const orderId = parseInt(req.params.id as string);
     const result = await orderService.cancelOrder(orderId, req.user.id);
 
     res.json({
-      success: true,
       ...result,
     });
   } catch (error) {
@@ -168,11 +166,10 @@ export const banOrder = async (req: AuthRequest, res: Response): Promise<void> =
       return;
     }
 
-    const orderId = parseInt(req.params.id);
+    const orderId = parseInt(req.params.id as string);
     const result = await orderService.banOrder(orderId, req.user.id);
 
     res.json({
-      success: true,
       ...result,
     });
   } catch (error) {

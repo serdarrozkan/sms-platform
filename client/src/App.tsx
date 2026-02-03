@@ -41,7 +41,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/sms">
       <Toaster
         position="top-right"
         toastOptions={{
